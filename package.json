@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "tsc",
     "build": "tsc && esbuild build/index.js --bundle --platform=node --target=node16.3 --outfile=serverless/index.js",
-    "postbuild": "cd serverless && zip -r index.zip index.js*",
+    "postbuild": "cd serverless && zip -r function.zip index.js*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
