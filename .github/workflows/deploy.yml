@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  build-gradle-project:
+  build-epistemo-hippodrome:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project sources
@@ -15,8 +15,8 @@ jobs:
         with:
           node-version: '16.x'
       - run: npm install
-      - run: npm build
-      - run: npm postbuild
+      - run: npm run build
+      - run: npm run postbuild
 
       - name: Upload package to bucket
         uses: zdurham/s3-upload-github-action@master
