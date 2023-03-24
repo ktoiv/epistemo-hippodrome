@@ -13,7 +13,7 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
 		case '/races':
 			const races = await handleRaces(event)
 			return races
-		case '/races':
+		case '/race':
 			const race = await handleRace(event)
 			return race
 		default:
