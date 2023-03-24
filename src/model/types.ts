@@ -17,7 +17,7 @@ export type Race = {
 
 export type Runner = {
     runnerId: number;
-    horseName: number;
+    horseName: string;
     startNumber: number;
     startTrack: number;
     distance: number;
@@ -39,4 +39,34 @@ export type Odd = {
     probable?: number;
     percentage?: number;
     raceId?: number; // is only in V-games
+}
+
+export type Game = {
+    type: string;
+    odds: Odd[];
+}
+
+export type CommonOdd = {
+    name: string,
+    decimal: number,
+    percentage: number
+}
+
+export type Participant = {
+    name: string;
+    startNumber: number;
+    startTrack: number;
+    frontShoes: boolean;
+    rearShoes: boolean;
+    odds: CommonOdd[]
+}
+
+export type Horse = {
+    number: number
+    name: string
+    frontShoes: boolean
+    rearShoes: boolean
+    driver: string
+    coach: string
+    odds: CommonOdd[]
 }

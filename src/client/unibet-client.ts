@@ -27,12 +27,12 @@ const EMPTY_UNIBET_EVENT: UnibetEvent =  {
 }
 
 
-const fetchUnibetOdds = async(track: string, start: number) => {
+const fetchUnibetOdds = async(track: string, start: number): Promise<Outcome[]> => {
 
     const cacheKey: string = computeCacheKey(track, start) 
     
     if (UNIBET_CACHE.has(cacheKey)) {
-        return UNIBET_CACHE.get(cacheKey)
+        return UNIBET_CACHE.get(cacheKey)!
     }
 
     try {

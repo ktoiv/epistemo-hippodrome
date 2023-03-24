@@ -1,16 +1,35 @@
 import axios, { AxiosResponse } from "axios"
 import { Card, Odd, Pool, Race, Runner } from "../model/types"
+import NodeCache from "node-cache"
 
 const VEIKKAUS_BASE_URL = process.env.VEIKKAUS_URL
 
 const CARD_PATH = "cards/today"
 const SWEDEN_COUNTRY_CODE = "SE"
 
+const CARDS_CACHE_KEY = "CARDS"
+const RACE_CACHE_KEY_SUFFIX = "-RACES"
+const RUNNERS_CACHE_KEY_SUFFIX = "-RUNNERS"
+const POOLS_CACHE_KEY_SUFFIX = "-POOLS"
+
+const VEIKKAUS_CACHE = new NodeCache({
+    useClones: false,
+    stdTTL: 300
+})
+
 const fetchCardsForToday = async (): Promise<Card[]> => {
+    
+    if (VEIKKAUS_CACHE.has(CARDS_CACHE_KEY)) {
+        return VEIKKAUS_CACHE.get(CARDS_CACHE_KEY)!
+    }
+
     try {
         const response: AxiosResponse = await axios.get(`${VEIKKAUS_BASE_URL}/${CARD_PATH}`)
         const cards: Card[] = response.data.collection
-        return cards.filter(card => card.country === SWEDEN_COUNTRY_CODE)
+        const swedishCards: Card[] =  cards.filter(card => card.country === SWEDEN_COUNTRY_CODE)
+    
+        VEIKKAUS_CACHE.set(CARDS_CACHE_KEY, swedishCards)
+        return swedishCards
 
     } catch (error) {
         console.log("Coul not find cards for today, returning empty list", 'REASON:', error)
@@ -23,10 +42,18 @@ const RACE_PATH_PREFIX = "card"
 const RACE_PATH_SUFFIX = "races"
 
 const fetchRacesForCard = async (card: Card): Promise<Race[]> => {
+
+    const cacheKey = `${card.trackName}${RACE_CACHE_KEY_SUFFIX}`
+
+    if (VEIKKAUS_CACHE.has(cacheKey)) {
+        return VEIKKAUS_CACHE.get(cacheKey)!
+    }
+
     try {
         const response = await axios.get(`${VEIKKAUS_BASE_URL}/${RACE_PATH_PREFIX}/${card.cardId}/${RACE_PATH_SUFFIX}`)
         const races: Race[] = response.data.collection
 
+        VEIKKAUS_CACHE.set(cacheKey, races)
         return races
 
     } catch (error) {
@@ -40,9 +67,18 @@ const RUNNERS_PATH_PREFIX = "race"
 const RUNNERS_PATH_SUFFIX = "runners"
 
 const fetchRunnersForRace = async (race: Race): Promise<Runner[]> => {
+
+    const cacheKey = `${race.raceId}${RUNNERS_CACHE_KEY_SUFFIX}`
+
+    if (VEIKKAUS_CACHE.has(cacheKey)) {
+        return VEIKKAUS_CACHE.get(cacheKey)!
+    }
+
     try {
         const response = await axios.get(`${VEIKKAUS_BASE_URL}/${RUNNERS_PATH_PREFIX}/${race.raceId}/${RUNNERS_PATH_SUFFIX}`)
         const runners: Runner[] = response.data.collection
+
+        VEIKKAUS_CACHE.set(cacheKey, runners)
         return runners
 
     } catch (error) {
@@ -56,10 +92,16 @@ const POOLS_PATH_PREFIX = "race"
 const POOLS_PATH_SUFFIX = "pools"
 
 const fetchPoolsForRace = async (race: Race): Promise<Pool[]> => {
+    const cacheKey = `${race.raceId}${POOLS_CACHE_KEY_SUFFIX}`
+
+    if (VEIKKAUS_CACHE.has(cacheKey)) {
+        return VEIKKAUS_CACHE.get(cacheKey)!
+    }
+
     try {
         const response = await axios.get(`${VEIKKAUS_BASE_URL}/${POOLS_PATH_PREFIX}/${race.raceId}/${POOLS_PATH_SUFFIX}`)
         const pools: Pool[] = response.data.collection
-
+        VEIKKAUS_CACHE.set(cacheKey, pools)
         return pools
 
     } catch (error) {
