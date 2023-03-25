@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios"
-import { Card, Odd, Pool, Race, Runner } from "../model/types"
+import { Card, Odd, Pool, Race, Runner } from "../model/veikkaus-types"
 import NodeCache from "node-cache"
 
-const VEIKKAUS_BASE_URL = process.env.VEIKKAUS_URL
+const VEIKKAUS_BASE_URL = process.env.VEIKKAUS_URL || ''
 
 const CARD_PATH = "cards/today"
 const SWEDEN_COUNTRY_CODE = "SE"
@@ -11,6 +11,8 @@ const CARDS_CACHE_KEY = "CARDS"
 const RACE_CACHE_KEY_SUFFIX = "-RACES"
 const RUNNERS_CACHE_KEY_SUFFIX = "-RUNNERS"
 const POOLS_CACHE_KEY_SUFFIX = "-POOLS"
+
+const isAWantedPool = (pool: Pool) => pool.poolType.match(/^T\d/) || pool.poolType === "VOI";
 
 const VEIKKAUS_CACHE = new NodeCache({
     useClones: false,
@@ -100,7 +102,7 @@ const fetchPoolsForRace = async (race: Race): Promise<Pool[]> => {
 
     try {
         const response = await axios.get(`${VEIKKAUS_BASE_URL}/${POOLS_PATH_PREFIX}/${race.raceId}/${POOLS_PATH_SUFFIX}`)
-        const pools: Pool[] = response.data.collection
+        const pools: Pool[] = response.data.collection.filter(isAWantedPool)
         VEIKKAUS_CACHE.set(cacheKey, pools)
         return pools
 

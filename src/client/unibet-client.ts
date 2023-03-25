@@ -63,8 +63,10 @@ const fetchUnibetData = async (): Promise<UnibetEvent[]> => {
 
 const findOddsForTrackAndStart = (track: string, start: number, events: UnibetEvent[]): Outcome[] => {
     const correctEvent: UnibetEvent = events.find((unibetEvent: UnibetEvent) => {
-        const [_, raceString] = unibetEvent.event.name.split('-')
-        const [trackName, startNumberString] = raceString.split('#')
+        const trackAndStartString = unibetEvent.event.name.split('–')[1]
+        const parts = trackAndStartString.split('#')
+        const trackName = parts[0].trim()
+        const startNumberString = parts[1].trim()
 
         return trackName.toLowerCase() === track.toLowerCase() && parseInt(startNumberString) === start
     }) || EMPTY_UNIBET_EVENT
@@ -73,7 +75,6 @@ const findOddsForTrackAndStart = (track: string, start: number, events: UnibetEv
     const outcomes: Outcome[] = betOffer.outcomes
 
     UNIBET_CACHE.set(computeCacheKey(track, start), outcomes)
-
     return outcomes
 }
 
