@@ -87,7 +87,7 @@ const handleRace = async (event: any): Promise<APIGatewayProxyResult> => {
 	const games: Game[] = await Promise.all(gamePromises)
 
 	const runners: Runner[] = await VeikkausClient.fetchRunnersForRace(race)
-	const horses: Horse[] = ResponseComposer.composeRaceResponse(runners, games, unibetOutcomes)
+	const horses: Horse[] = await ResponseComposer.composeRaceResponse(runners, games, unibetOutcomes)
 
 	return {
 		statusCode: 200,

@@ -19,6 +19,8 @@ export type Horse = {
     frontShoes: boolean
     rearShoes: boolean
     driver: string
-    coach: string
+    coach: string,
+    stallform: number,
+    amount: number,
     odds: CommonOdd[]
 }
