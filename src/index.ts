@@ -5,6 +5,10 @@ import { Card, Game, Odd, Pool, Race, Runner } from "./model/veikkaus-types";
 import { Outcome } from "./model/unibet-types";
 import { ResponseComposer } from "./response-composer";
 import { Horse, Starts, Track } from "./model/types";
+import { CONFIG } from "./utils/config";
+import mongoose from "mongoose";
+
+mongoose.connect(CONFIG.MONGODB_URI || '')
 
 export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
 	try {
@@ -117,3 +121,20 @@ const validateRaceRequestParams = (event: APIGatewayEvent) => {
 
 	return { cardName, start }
 }
+
+
+const run = async () => {
+
+	const event = {
+		queryStringParameters: {
+			card: 'boden',
+			start: 6
+		}
+
+	}
+
+	const horses = await handleRace(event)
+	console.log(horses)
+}
+
+run()

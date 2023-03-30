@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from "axios"
 import NodeCache from "node-cache"
 import { BetOffer, Outcome, UnibetEvent } from "../model/unibet-types"
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 const UNIBET_BASE_URL = process.env.UNIBET_URL || ''
 

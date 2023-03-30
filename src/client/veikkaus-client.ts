@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from "axios"
 import { Card, Odd, Pool, Race, Runner } from "../model/veikkaus-types"
 import NodeCache from "node-cache"
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 const VEIKKAUS_BASE_URL = process.env.VEIKKAUS_URL || ''
 
