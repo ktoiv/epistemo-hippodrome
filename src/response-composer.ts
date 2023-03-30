@@ -65,7 +65,7 @@ const composeRaceResponse = async (runners: Runner[], games: Game[], unibetOutco
 }
 
 const calculateBetWithKellyFormula = (winnerOdds: number, unibetOdds: number, stallform: number): number => {
-	const percentage = (((unibetOdds / 100) + (stallform / 100)) * (1 / (winnerOdds / 100)) - 1) / ((1 / (winnerOdds / 100)) - 1)
+	const percentage = (((unibetOdds / 100) * (1 + (stallform / 100) )) * (1 / (winnerOdds / 100)) - 1) / ((1 / (winnerOdds / 100)) - 1)
 	return 100 * percentage
 }
 
