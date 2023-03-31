@@ -121,20 +121,3 @@ const validateRaceRequestParams = (event: APIGatewayEvent) => {
 
 	return { cardName, start }
 }
-
-
-const run = async () => {
-
-	const event = {
-		queryStringParameters: {
-			card: 'boden',
-			start: 6
-		}
-
-	}
-
-	const horses = await handleRace(event)
-	console.log(horses)
-}
-
-run()
